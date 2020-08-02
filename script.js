@@ -19,12 +19,13 @@ function getFormattedNumber(num){
 	if(num=="-"){
 		return "";
 	}
-	var n = Number(num);
-	var value = n.toLocaleString("en");
+	// var n = Number(num);
+	// since num could be something like '2.', converting to a Number at this point will raise an error
+	var value = num.toLocaleString("en");
 	return value;
 }
 function reverseNumberFormat(num){
-	return Number(num.replace(/,/g,''));
+	return num.replace(/,/g,'');
 }
 var operator = document.getElementsByClassName("operator");
 for(var i =0;i<operator.length;i++){
@@ -69,10 +70,22 @@ for(var i =0;i<operator.length;i++){
 var number = document.getElementsByClassName("number");
 for(var i =0;i<number.length;i++){
 	number[i].addEventListener('click',function(){
+		let input = this.id;
+
+		if(input == '.'){
+			if(getOutput().includes('.')){	// check if more than one decimal point has been entered
+				input = '';
+			}
+			else if(getOutput() === ''){	// checks if no number has been entered before the decimal point was entered
+				input = '0.';
+			}
+		}
 		var output=reverseNumberFormat(getOutput());
+		
 		if(output!=NaN){ //if output is a number
-			output=output+this.id;
+			output += input;
 			printOutput(output);
+			
 		}
 	});
 }
